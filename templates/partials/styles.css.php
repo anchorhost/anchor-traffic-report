@@ -63,6 +63,29 @@
   .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
   .mono { font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace; letter-spacing: .01em; }
 
+  /* ---------- post URL pill ---------- */
+  .post-url {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 22px;
+    padding: 7px 14px 7px 12px;
+    border: 1px solid var(--line-soft);
+    border-radius: 99px;
+    background: var(--card);
+    color: var(--muted);
+    font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
+    font-size: 12px; letter-spacing: .01em; line-height: 1;
+    text-decoration: none;
+    max-width: 100%;
+    transition: color .15s ease, border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .post-url:hover { color: var(--text); border-color: var(--line); transform: translateY(-1px); }
+  .post-url svg { width: 14px; height: 14px; flex: 0 0 14px; color: var(--accent); }
+  .post-url .host { color: var(--dim); }
+  .post-url .path { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .post-url:hover .path { color: var(--accent-soft); }
+  .post-url .ext { color: var(--dim); margin-left: 2px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+  .post-url:hover .ext { color: var(--text); }
+
   /* ---------- snapshot scrubber ---------- */
   .scrubber {
     margin-top: 24px;

@@ -70,6 +70,24 @@ unset( $f );
     </div>
   </header>
 
+  <?php if ( ! empty( $report['post_url'] ) ) :
+    $purl = $report['post_url'];
+    $parts = wp_parse_url( $purl );
+    $host  = $parts['host'] ?? '';
+    $path  = ( $parts['path'] ?? '' );
+    if ( $parts['query']    ?? '' ) $path .= '?' . $parts['query'];
+    if ( $parts['fragment'] ?? '' ) $path .= '#' . $parts['fragment'];
+  ?>
+  <a class="post-url" href="<?php echo esc_url( $purl ); ?>" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+    </svg>
+    <span class="host"><?php echo esc_html( $host ); ?></span><span class="path"><?php echo esc_html( $path ); ?></span>
+    <span class="ext" aria-hidden="true">↗</span>
+  </a>
+  <?php endif; ?>
+
   <?php if ( $multi ) : ?>
   <nav class="scrubber" aria-label="Snapshot timeline">
     <div class="scrub-track">
