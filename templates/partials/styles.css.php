@@ -130,7 +130,7 @@
   .scrub-tip strong { display: block; font-weight: 700; font-size: 12px; }
   .scrub-tip span { color: var(--muted); }
   .scrub-dot:hover .scrub-tip,
-  .scrub-dot:focus .scrub-tip { opacity: 1; }
+  .scrub-dot:focus-visible .scrub-tip { opacity: 1; }
 
   .snap-body[hidden] { display: none; }
 

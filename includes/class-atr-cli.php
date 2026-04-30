@@ -318,17 +318,43 @@ class ATR_CLI {
     }
 
     /**
-     * Render a report to HTML.
+     * Render report(s) to HTML.
      *
-     * Defaults to writing <abspath>/reports/<slug>-report.html.
-     *   --out=<path>  override destination
-     *   --stdout      print to stdout instead of writing
+     *   wp atr render <slug>            single report → <abspath>/reports/<slug>-report.html
+     *   wp atr render <slug> --out=...  override destination
+     *   wp atr render <slug> --stdout   print to stdout
+     *   wp atr render --all             regenerate every report (handy for renderer changes)
      *
      * @when after_wp_load
      */
     public function render( $args, $assoc ) {
+        if ( ! empty( $assoc['all'] ) ) {
+            $reports = ATR_Reports::list();
+            if ( ! $reports ) WP_CLI::warning( 'No reports to render.' );
+            $total = 0;
+            foreach ( $reports as $r ) {
+                try {
+                    $html = ATR_Renderer::render( $r['slug'] );
+                } catch ( Throwable $e ) {
+                    WP_CLI::warning( "{$r['slug']}: " . $e->getMessage() );
+                    continue;
+                }
+                $out = ABSPATH . 'reports/' . sanitize_file_name( $r['slug'] ) . '-report.html';
+                if ( ! is_dir( dirname( $out ) ) ) wp_mkdir_p( dirname( $out ) );
+                $bytes = file_put_contents( $out, $html );
+                if ( $bytes === false ) {
+                    WP_CLI::warning( "Failed to write {$out}" );
+                    continue;
+                }
+                WP_CLI::log( "  ✓ {$r['slug']}  ({$bytes} bytes → {$out})" );
+                $total++;
+            }
+            WP_CLI::success( "Rendered {$total} report(s)" );
+            return;
+        }
+
         $slug = $args[0] ?? null;
-        if ( ! $slug ) WP_CLI::error( 'Slug required' );
+        if ( ! $slug ) WP_CLI::error( 'Slug required (or pass --all to render every report)' );
 
         try {
             $html = ATR_Renderer::render( $slug );
